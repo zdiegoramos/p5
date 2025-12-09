@@ -27,7 +27,10 @@ function sketch({
 	};
 }
 
-export function P5Canvas({ draw }: { draw: (p: p5) => void }) {
+export function P5Canvas({
+	draw,
+	...props
+}: React.ComponentProps<"div"> & { draw: (p: p5) => void }) {
 	const p5CanvasRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -50,5 +53,11 @@ export function P5Canvas({ draw }: { draw: (p: p5) => void }) {
 		});
 	}, [draw]);
 
-	return <div className="h-full w-full" ref={p5CanvasRef} />;
+	return (
+		<div
+			ref={p5CanvasRef}
+			style={{ width: "100%", height: "100%" }}
+			{...props}
+		/>
+	);
 }
