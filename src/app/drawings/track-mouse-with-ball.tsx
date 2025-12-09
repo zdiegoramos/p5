@@ -1,7 +1,7 @@
 "use client";
 
 import type p5 from "p5";
-import { P5Canvas } from "@/app/p5-setup";
+import { P5Canvas } from "@/components/p5";
 
 function draw(p: p5) {
 	p.background("tomato");

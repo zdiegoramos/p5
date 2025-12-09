@@ -12,14 +12,14 @@ function sketch({
 }) {
 	return (p: p5) => {
 		p.setup = () => {
-			const width = canvasElement.clientWidth;
-			const height = canvasElement.clientHeight;
+			const width = canvasElement.getBoundingClientRect().width;
+			const height = canvasElement.getBoundingClientRect().height;
 			p.createCanvas(width, height);
 		};
 
 		p.windowResized = () => {
-			const width = canvasElement.clientWidth;
-			const height = canvasElement.clientHeight;
+			const width = canvasElement.getBoundingClientRect().width;
+			const height = canvasElement.getBoundingClientRect().height;
 			p.resizeCanvas(width, height);
 		};
 
