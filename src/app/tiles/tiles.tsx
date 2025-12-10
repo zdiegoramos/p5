@@ -8,8 +8,6 @@ let rows = 0;
 let blocks: ReturnType<typeof Block>[][] = [];
 const mouseDistance = 30;
 
-// let b: ReturnType<typeof Block>;
-
 function Block(x: number, y: number, size: number) {
 	return {
 		x,
@@ -41,34 +39,24 @@ function Block(x: number, y: number, size: number) {
 function setup(p: p5) {
 	p.angleMode(p.DEGREES);
 	p.rectMode(p.CENTER);
-	// Divide canvas into grid of blocks
-	// Calculate the number of rows and columns based on
-	// the width and height of the canvas
-	// Each block should be 5% of the canvas size
 	const size = p.width * 0.05;
 	colums = p.width / size;
 	rows = p.height / size;
-
-	// b = Block(p.width / 2, p.height / 2);
 
 	blocks = Array.from({ length: colums }, (_, i) =>
 		Array.from({ length: rows }, (_, j) =>
 			Block(i * size + size / 2, j * size + size / 2, size),
 		),
 	);
-
-	console.log(blocks);
 }
 
 function draw(p: p5) {
 	p.background("tomato");
 
-	for (let i = 0; i < colums; i++) {
-		for (let j = 0; j < rows; j++) {
-			blocks[i]?.[j]?.move(p);
-			blocks[i]?.[j]?.display(p);
-		}
-	}
+	blocks.flat().forEach((block) => {
+		block.move(p);
+		block.display(p);
+	});
 }
 
 export function Tiles() {
