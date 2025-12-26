@@ -7,26 +7,31 @@ function sketch({
 	canvasElement,
 	draw,
 	setup,
+	disableResize,
 }: {
 	canvasElement: HTMLDivElement;
 	draw: (p: p5) => void;
-	setup?: (p: p5) => void;
+	setup?: (p: p5, height: number, width: number) => void;
+	disableResize?: boolean;
 }) {
 	return (p: p5) => {
 		p.setup = () => {
 			const width = canvasElement.getBoundingClientRect().width;
 			const height = canvasElement.getBoundingClientRect().height;
-			p.createCanvas(width, height);
 			if (setup) {
-				setup(p);
+				setup(p, height, width);
+			} else {
+				p.createCanvas(width, height);
 			}
 		};
 
-		p.windowResized = () => {
-			const width = canvasElement.getBoundingClientRect().width;
-			const height = canvasElement.getBoundingClientRect().height;
-			p.resizeCanvas(width, height);
-		};
+		if (!disableResize) {
+			p.windowResized = () => {
+				const width = canvasElement.getBoundingClientRect().width;
+				const height = canvasElement.getBoundingClientRect().height;
+				p.resizeCanvas(width, height);
+			};
+		}
 
 		p.draw = () => draw(p);
 	};
@@ -38,7 +43,7 @@ export function P5Canvas({
 	...props
 }: React.ComponentProps<"div"> & {
 	draw: (p: p5) => void;
-	setup?: (p: p5) => void;
+	setup?: (p: p5, height: number, width: number) => void;
 }) {
 	const p5CanvasRef = useRef<HTMLDivElement>(null);
 

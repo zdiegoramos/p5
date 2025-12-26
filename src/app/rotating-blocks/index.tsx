@@ -63,7 +63,8 @@ function Block(i: number, j: number, size: number) {
 	};
 }
 
-function setup(p: p5) {
+function setup(p: p5, height: number, width: number) {
+	p.createCanvas(width, height);
 	p.angleMode(p.DEGREES);
 	p.rectMode(p.CENTER);
 	// Select the bigger dimension between width and height
