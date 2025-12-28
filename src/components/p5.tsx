@@ -7,14 +7,21 @@ function sketch({
 	canvasElement,
 	draw,
 	setup,
+	preload,
 	disableResize,
 }: {
 	canvasElement: HTMLDivElement;
 	draw: (p: p5) => void;
 	setup?: (p: p5, height: number, width: number) => void;
+	preload?: (p: p5) => void;
 	disableResize?: boolean;
 }) {
 	return (p: p5) => {
+		if (preload) {
+			console.log("Preloading...");
+			() => preload(p);
+		}
+
 		p.setup = () => {
 			const width = canvasElement.getBoundingClientRect().width;
 			const height = canvasElement.getBoundingClientRect().height;
@@ -40,10 +47,12 @@ function sketch({
 export function P5Canvas({
 	draw,
 	setup,
+	preload,
 	...props
 }: React.ComponentProps<"div"> & {
 	draw: (p: p5) => void;
 	setup?: (p: p5, height: number, width: number) => void;
+	preload?: (p: p5) => void;
 }) {
 	const p5CanvasRef = useRef<HTMLDivElement>(null);
 
@@ -55,17 +64,18 @@ export function P5Canvas({
 		}
 
 		// Dynamically import p5 only on the client side
+		let p5Instance: p5 | null = null;
 		import("p5").then((p5Module) => {
-			const p5Instance = new p5Module.default(
-				sketch({ canvasElement: p5Current, draw, setup }),
+			p5Instance = new p5Module.default(
+				sketch({ canvasElement: p5Current, draw, setup, preload }),
 				p5Current,
 			);
-
-			return () => {
-				p5Instance.remove();
-			};
 		});
-	}, [draw, setup]);
+
+		return () => {
+			p5Instance?.remove();
+		};
+	}, [draw, setup, preload]);
 
 	return (
 		<div
